@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <img src="{{ url_for('static', filename='images/student-finance.svg') }}" alt="student-finance" class="d-block mx-auto p-3 start-img">
+
+    <div class="d-flex justify-content-center p-2">
+        <a href="{{ url_for('login') }}" class="btn btn-outline-light mx-3 px-3 py-2">Login</a>
+        <a href="{{ url_for('register') }}" class="btn btn-outline-light mx-3 px-3 py-2">Register</a>
+    </div>
+
+{% endblock content %}
