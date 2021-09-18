@@ -3,7 +3,6 @@ import pymongo
 import hashlib
 import dotenv
 import os
-import pymongo
 
 dotenv.load_dotenv()
 
