@@ -43,7 +43,6 @@ document.getElementById('add-btn').addEventListener('click', add_item);
 
 const remove_item = (id) => {
     document.getElementById(id).remove();
-    num_items--;
 }
 
 // Form submit
@@ -56,9 +55,11 @@ async function addFormToBackend(event) {
 
     let items = {};
     for (let i = 1; i <= num_items; i++) {
-        let item_name = document.getElementById(`item-${i}-name`).value;
-        let item_cost = document.getElementById(`item-${i}-cost`).value;
-        items[item_name] = item_cost;
+        try {
+            let item_name = document.getElementById(`item-${i}-name`).value;
+            let item_cost = document.getElementById(`item-${i}-cost`).value;
+            items[item_name] = item_cost;
+        } catch {}
     }
 
     budget = {
