@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h1>Budget Name</h1>
+    <h1 class="text-light">{{ user }}'s Budgets</h1>
     
-    <form action="#">
-        
+    <form method="POST" class="border rounded p-3" id="budget-form">
+        <div id="budget-value-wrapper" class="form-group my-3">
+            <input type="number" id="budget-value" class="form-control" placeholder="Budget Value" required>
+        </div>
+        <div id="items"></div>
+        <button id="add-btn" class="btn btn-primary ms-2">+</button>
+        <button type="submit" class="btn btn-primary">Render Budget</button</a>
     </form>
 
+    <script>var budget = JSON.parse('{{ budget | tojson | safe }}');</script>
+    <script src="{{ url_for('static', filename='js/budget.js') }}"></script>
 
 {% endblock content %}

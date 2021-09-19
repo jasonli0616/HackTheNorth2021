@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, session, flash
+from flask import Flask, json, render_template, url_for, request, redirect, session, flash, jsonify
 import pymongo
 import hashlib
 import dotenv
@@ -22,8 +22,21 @@ def toHash(value:str):
 @app.route('/')
 def index():
     if 'user' in session:
-        return render_template('home.html', user=session['user'])
-    return render_template('index.html')
+        # get 
+        try:
+            budget = mongodb_users.find_one({'username': session['user']})['budget']
+        except:
+            budget = {}
+        
+        return render_template('budget.html', session=session, user=session['user'], budget=budget)
+    return render_template('index.html', session=session)
+
+
+
+'''
+User authentication
+------------------------------
+'''
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -35,9 +48,11 @@ def login():
         email = request.form['email']
         password = toHash(request.form['password'])
 
-        if mongodb_users.find_one({'email': email, 'password': password}):
+        user = mongodb_users.find_one({'email': email, 'password': password})
+
+        if user:
             # if username and password correct
-            session["user"] = email
+            session["user"] = user['username']
             flash('You are logged in!', 'success')
             return redirect(url_for('index'))
         else:
@@ -92,7 +107,7 @@ def register():
                 'username': username,
                 'email': email,
                 'password': password,
-                'budgets': {}
+                'budget': {}
             }
             mongodb_users.insert_one(user)
 
@@ -110,6 +125,42 @@ def logout():
     # Remove data from session
     session.pop("user")
     return redirect(url_for('index'))
+
+'''
+------------------------------
+'''
+
+
+
+'''
+Creating and managing budgets
+------------------------------
+'''
+
+@app.route('/api/create-budget/', methods=['POST'])
+def api_create_budget():
+    mongodb_users.update_one(
+        {'username': session['user']},
+        {'$set': {'budget': request.json}}
+    )
+    
+    return jsonify(request.json)
+
+
+@app.route('/api/get-budget/')
+def api_get_budget():
+    return jsonify(mongodb_users.find_one({'username': session['user']})['budget'])
+
+@app.route('/view')
+def view():
+    if "user" in session:
+        return render_template('chart.html', session=session, budget=mongodb_users.find_one({'username': session['user']})['budget'])
+    else:
+        return redirect(url_for('index'))
+
+'''
+------------------------------
+'''
 
 def main():
     app.run(debug=True)
