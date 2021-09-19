@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <canvas id="myChart" style="max-height: 80vh;"></canvas>
     <script>const budget = JSON.parse('{{ budget | tojson | safe }}');</script>
-    <script>console.log(budget);</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
